@@ -3,12 +3,13 @@ import Link from "next/link";
 interface Props {
   href: string;
   children: React.ReactNode;
+  className?: string;
 }
 
-export const ButtonLink = ({ href, children }: Props) => {
+export const ButtonLink = ({ href, children, className }: Props) => {
   return (
     <Link
-      className="bg-dark-purple px-4 py-2 rounded-lg text-white inline-block shadow-md  hover:bg-light-purple"
+      className={`text-2xl text-white hover:underline cursor-pointer ${className}`}
       href={href}
     >
       {children}
