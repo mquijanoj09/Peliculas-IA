@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Half } from "@/components/login/Half/Half";
 import { getDatabase, onValue, ref, set } from "firebase/database";
@@ -9,7 +9,11 @@ import { db } from "@/utils/firebase";
 const Login = () => {
   const [id, setId] = useState("");
   const router = useRouter();
-  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    const user = localStorage.getItem("userId");
+    if (user) router.push("/login");
+  }, [router]);
 
   function writeUserData(userId: string) {
     const starCountRef = ref(db, "users/" + userId);
@@ -31,7 +35,6 @@ const Login = () => {
     setId("");
   }
 
-  if (userId) router.push("/");
   return (
     <main className="grid lg:grid-cols-2 min-h-screen">
       <Half />
