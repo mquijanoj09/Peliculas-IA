@@ -30,8 +30,14 @@ export default function Home() {
     const [watched, setWatched] = useState<Watched[]>([]);
     const [selectedMovie, setSelectedMovie] = useState<MovieI>();
     const [query, setQuery] = useState("");
-    const userId = localStorage.getItem("userId");
     const router = useRouter();
+    const [userId, setUserId] = useState("");
+
+    useEffect(() => {
+      const user = localStorage.getItem("userId");
+      setUserId(user || "");
+      if (!user) router.push("/login");
+    }, [router]);
 
     useEffect(() => {
       const starCountRef = ref(db, "users/" + userId + "/movies");
@@ -78,14 +84,11 @@ export default function Home() {
       });
     };
 
-    console.log(selectedMovie?.imdbID);
-
     const handleLogout = () => {
       localStorage.removeItem("userId");
       router.push("/login");
     };
 
-    if (!userId) router.push("/login");
     return (
       <>
         <NavBar>
