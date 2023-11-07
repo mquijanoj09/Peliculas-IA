@@ -6,7 +6,7 @@ import { slides } from "@/data/slidesData";
 export const Half = () => {
   return (
     <div className="bg-light-grey lg:flex items-center justify-center flex-col gap-y-16 px-60 hidden">
-      <h1 className="text-white text-6xl font-bold self-start">🎥 IA Movies</h1>
+      <h1 className="text-white text-6xl font-bold self-start">🎥 AI Movies</h1>
       <Image src={Img_Pel} alt="Peliculas IA" />
       <Slider slides={slides} />
     </div>

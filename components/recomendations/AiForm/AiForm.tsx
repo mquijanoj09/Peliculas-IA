@@ -1,13 +1,22 @@
-import { AiSelection, Box, Button, ButtonLink } from "@/components";
-import { Movie } from "@/interfaces/Movie";
-import { FormEvent, useState } from "react";
+import { Box, Button, ButtonLink, SelectedMovie } from "@/components";
+import { aiSelectedMovie } from "@/data/tempAiMovie";
+import { set } from "firebase/database";
+import { FormEvent, use, useEffect, useState } from "react";
 
-interface Props {
-  aiSelectedMovie: Movie;
-}
-
-export function AiForm({ aiSelectedMovie }: Props) {
+export function AiForm() {
   const [isOpen, setIsOpen] = useState(false);
+  const [random1, setRandom1] = useState<number>();
+  const [random2, setRandom2] = useState<number>();
+
+  useEffect(() => {
+    const ran1 = Math.floor(Math.random() * 9);
+    let ran2 = Math.floor(Math.random() * 9);
+    if (ran2 === ran1) {
+      ran2 = ran2 + 1;
+    }
+    setRandom2(ran2);
+    setRandom1(ran1);
+  }, []);
 
   const handleOnSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,7 +38,7 @@ export function AiForm({ aiSelectedMovie }: Props) {
         AI Recomendations 🤖
       </h1>
       <div className="flex gap-8 items-center flex-1">
-        <label className="text-3xl">Enter your name: </label>
+        <label className="text-3xl">¿How are you feeling today?</label>
         <input
           type="text"
           name="name"
@@ -39,11 +48,11 @@ export function AiForm({ aiSelectedMovie }: Props) {
         />
       </div>
       <div className="flex gap-8 items-center">
-        <label className="text-3xl">Enter your email: </label>
+        <label className="text-3xl">¿What is your favorite genre?</label>
         <input
-          type="email"
-          name="email"
-          id="email"
+          type="text"
+          name="genre"
+          id="genre"
           className="bg-lighter-grey rounded-lg shadow-md text-2xl px-6 py-4 text-left flex-1"
           required
         />
@@ -61,10 +70,20 @@ export function AiForm({ aiSelectedMovie }: Props) {
       </h1>
       <div className="mt-10 flex gap-10 justify-center h-[calc(100vh-7.2rem-3*4.8rem)]">
         <Box>
-          <AiSelection aiSelectedMovie={aiSelectedMovie} />
+          {random1 !== undefined && (
+            <SelectedMovie
+              selectedMovieID={aiSelectedMovie[random1]}
+              ratingDisabled
+            />
+          )}
         </Box>
         <Box>
-          <AiSelection aiSelectedMovie={aiSelectedMovie} />
+          {random2 !== undefined && (
+            <SelectedMovie
+              selectedMovieID={aiSelectedMovie[random2]}
+              ratingDisabled
+            />
+          )}
         </Box>
       </div>
     </div>

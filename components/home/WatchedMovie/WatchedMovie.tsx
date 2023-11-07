@@ -2,9 +2,10 @@ import { Watched } from "@/interfaces/Watched";
 
 interface Props {
   movie: Watched;
+  onRemoveMovie: (movie: Watched) => void;
 }
 
-export function WatchedMovie({ movie }: Props) {
+export function WatchedMovie({ movie, onRemoveMovie }: Props) {
   return (
     <li className="relative flex gap-x-10 text-xl items-center border-b border-lighter-grey py-6 px-12">
       <img
@@ -25,9 +26,15 @@ export function WatchedMovie({ movie }: Props) {
           </p>
           <p className="flex items-center gap-3 text-2xl">
             <span>⏳</span>
-            <span>{movie.runtime} min</span>
+            <span>{movie.Runtime}</span>
           </p>
         </div>
+        <button
+          onClick={() => onRemoveMovie(movie)}
+          className="absolute top-3 right-3 h-10 aspect-square rounded-full border-none bg-slate-950 text-white text-2xl font-bold cursor-pointer	z-10 flex justify-center items-center hover:bg-slate-900 hover:no-underline"
+        >
+          x
+        </button>
       </div>
     </li>
   );

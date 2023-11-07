@@ -1,9 +1,5 @@
-export interface Watched {
-  imdbID: string;
-  Title: string;
-  Year: string;
-  Poster: string;
-  runtime: number;
-  imdbRating: number;
+import { Movie } from "./Movie";
+
+export interface Watched extends Movie {
   userRating: number;
 }

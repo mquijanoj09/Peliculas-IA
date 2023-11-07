@@ -8,16 +8,15 @@ interface Props {
 }
 
 export function WatchedSummary({ watched }: Props) {
-  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
-  const avgUserRating = average(watched.map((movie) => movie.userRating));
-  const avgRuntime = average(watched.map((movie) => movie.runtime));
-
-  // const paragraphs = document.querySelectorAll("p");
-  // console.log(paragraphs);
-
-  // paragraphs.forEach((p) => {
-  //   p.classList.add("flex items-center gap-3 text-blue");
-  // });
+  const avgImdbRating = average(
+    watched.map((movie) => Number(movie.imdbRating))
+  ).toFixed(1);
+  const avgUserRating = average(
+    watched.map((movie) => movie.userRating)
+  ).toFixed(1);
+  const avgRuntime = average(
+    watched.map((movie) => parseInt(movie.Runtime))
+  ).toFixed(0);
 
   return (
     <div className="pt-9 px-14 pb-7 bg-lighter-grey shadow-md	">

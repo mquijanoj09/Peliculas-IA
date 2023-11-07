@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 interface Props {
   maxRating: number;
@@ -21,6 +21,10 @@ export default function StarRating({
   function handleRating(rating: number) {
     onSetRating(rating);
   }
+
+  useEffect(() => {
+    setTempRating(0);
+  }, [rating]);
 
   const textStyle = {
     color,

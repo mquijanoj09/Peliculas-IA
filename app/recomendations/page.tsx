@@ -1,18 +1,24 @@
 "use client";
 import { AiForm, NavBar, Recomendations } from "@/components";
 import { Movie } from "@/interfaces/Movie";
+import { useRouter } from "next/navigation";
 
-interface Props {
-  aiSelectedMovie: Movie;
-}
+export default function AiRecomendations() {
+  const userId = localStorage.getItem("userId");
+  const router = useRouter();
 
-export default function AiRecomendations({ aiSelectedMovie }: Props) {
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    router.push("/login");
+  };
+
+  if (!userId) router.push("/login");
   return (
     <>
       <NavBar className="grid-cols-2">
-        <Recomendations className="underline" />
+        <Recomendations className="underline" handleLogout={handleLogout} />
       </NavBar>
-      <AiForm aiSelectedMovie={aiSelectedMovie} />
+      <AiForm />
     </>
   );
 }

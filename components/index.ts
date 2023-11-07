@@ -14,4 +14,3 @@ export { WatchedSummary } from "./home/WatchedSummary/WatchedSummary";
 export { WatchedMoviesList } from "./home/WatchedMoviesList/WatchedMoviesList";
 export { AiForm } from "./recomendations/AiForm/AiForm";
 export { SelectedMovie } from "./ui/SelectedMovie/SelectedMovie";
-export { AiSelection } from "./recomendations/AiSelection/AiSelection";

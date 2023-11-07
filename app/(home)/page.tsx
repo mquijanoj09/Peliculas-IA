@@ -10,33 +10,96 @@ import {
   WatchedSummary,
   Recomendations,
 } from "@/components";
-import { useState } from "react";
-import { tempMovieData } from "@/data/tempMovieData";
-import { tempWatchedData } from "@/data/tempWatchedData";
+import { use, useEffect, useState } from "react";
 import { Movie as MovieI } from "@/interfaces/Movie";
 import { SelectedMovie } from "@/components/ui/SelectedMovie/SelectedMovie";
+import { Watched } from "@/interfaces/Watched";
+import { db } from "@/utils/firebase";
+import { useRouter } from "next/navigation";
+import {
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  set,
+  update,
+} from "firebase/database";
 
 export default function Home() {
   {
-    const [movies, setMovies] = useState(tempMovieData);
-    const [watched, setWatched] = useState(tempWatchedData);
+    const [watched, setWatched] = useState<Watched[]>([]);
     const [selectedMovie, setSelectedMovie] = useState<MovieI>();
+    const [query, setQuery] = useState("");
+    const userId = localStorage.getItem("userId");
+    const router = useRouter();
+
+    useEffect(() => {
+      const starCountRef = ref(db, "users/" + userId + "/movies");
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+        const dataArr = Object.values(data) as Watched[];
+        setWatched(dataArr);
+      });
+    }, [userId]);
+
+    const handleAddMovie = (movie: MovieI) => {
+      set(ref(db, "users/" + userId + "/movies/" + movie.imdbID), movie);
+      const moviesRef = ref(db, "users/" + userId + "/movies");
+      onValue(moviesRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) {
+          setWatched([]);
+          return;
+        }
+        const dataArr = Object.values(data) as Watched[];
+        setWatched(dataArr);
+      });
+      setSelectedMovie(undefined);
+    };
 
     const handleSetSelectedMovie = (movie: MovieI) => {
       setSelectedMovie(movie);
     };
 
+    const handleRemoveMovie = (movie: Watched) => {
+      const movieRef = ref(db, "users/" + userId + "/movies/" + movie.imdbID);
+      if (!movieRef) return;
+      set(movieRef, null);
+      const moviesRef = ref(db, "users/" + userId + "/movies");
+      onValue(moviesRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) {
+          setWatched([]);
+          return;
+        }
+        const dataArr = Object.values(data) as Watched[];
+        setWatched(dataArr);
+      });
+    };
+
+    console.log(selectedMovie?.imdbID);
+
+    const handleLogout = () => {
+      localStorage.removeItem("userId");
+      router.push("/login");
+    };
+
+    if (!userId) router.push("/login");
     return (
       <>
         <NavBar>
-          <Search />
-          <Recomendations />
+          <Search query={query} setQuery={setQuery} />
+          <Recomendations handleLogout={handleLogout} />
         </NavBar>
 
+        <div className="flex items-center justify-center text-2xl">
+          Bienvenido {userId}
+        </div>
         <Main>
           <Box>
             <MovieList
-              movies={movies}
+              query={query}
               onSelectedMovie={handleSetSelectedMovie}
               selectedMovieId={selectedMovie?.imdbID}
             />
@@ -51,12 +114,19 @@ export default function Home() {
                 >
                   x
                 </button>
-                <SelectedMovie selectedMovie={selectedMovie} />
+                <SelectedMovie
+                  selectedMovieID={selectedMovie.imdbID}
+                  onSetAddMovie={handleAddMovie}
+                  watched={watched}
+                />
               </div>
             ) : (
               <>
                 <WatchedSummary watched={watched} />
-                <WatchedMoviesList watched={watched} />
+                <WatchedMoviesList
+                  watched={watched}
+                  onRemoveMovie={handleRemoveMovie}
+                />
               </>
             )}
           </Box>

@@ -1,8 +1,13 @@
-import { Movie } from "@/interfaces/Movie";
-
-export const aiSelectedMovie: Movie = {
-  imdbID: "tt0111161",
-  Title: "The Shawshank Redemption",
-  Year: "1994",
-  Poster: "https://m.media-amazon.com/images/M/MV5BMDFkYTdlYzQtZTc2ZC00Yz",
-};
+export const aiSelectedMovie = [
+  "tt0348150",
+  "tt1216475",
+  "tt1790326",
+  "tt2975590",
+  "tt0499549",
+  "tt2707408",
+  "tt0499448",
+  "tt1905041",
+  "tt1013752",
+  "tt0948470",
+  "tt2395427",
+];

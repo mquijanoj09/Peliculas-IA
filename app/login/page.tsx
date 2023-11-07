@@ -3,10 +3,21 @@ import { Button } from "@/components";
 import React, { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Half } from "@/components/login/Half/Half";
+import { getDatabase, onValue, ref, set } from "firebase/database";
+import { db } from "@/utils/firebase";
 
 const Login = () => {
   const [id, setId] = useState("");
   const router = useRouter();
+  const userId = localStorage.getItem("userId");
+
+  function writeUserData(userId: string) {
+    const starCountRef = ref(db, "users/" + userId);
+    onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!data) set(ref(db, "users/" + userId), userId);
+    });
+  }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setId(e.target.value);
@@ -14,10 +25,13 @@ const Login = () => {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    writeUserData(id);
+    localStorage.setItem("userId", id);
     id === "" ? alert("Ingresa un ID válido") : router.push("/");
     setId("");
   }
 
+  if (userId) router.push("/");
   return (
     <main className="grid lg:grid-cols-2 min-h-screen">
       <Half />
