@@ -20,8 +20,19 @@ const config: Config = {
         "dark-purple": "#5B1BE1",
         "light-purple": "#6E34E7BD",
       },
+      width: {
+        "42rem": "42rem",
+        "40rem": "40rem",
+      },
+      maxWidth: {
+        "42rem": "42rem",
+      },
+      spacing: {
+        "7.2": "1.8rem",
+      },
     },
   },
+
   plugins: [],
 };
 export default config;
